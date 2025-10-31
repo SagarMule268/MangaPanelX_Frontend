@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         
         {/* Left - Branding */}
-        <h2 className="text-xl font-bold">MangaPanelX</h2>
+        <h2 className="text-xl font-lobster">MangaPanelX</h2>
 
         {/* Middle - Links */}
         <div className="flex space-x-6 font-bold  mt-4 md:mt-0  ">

@@ -23,7 +23,15 @@ const ReadChapter = () => {
     fetchChapter();
   }, [chapterId]);
 
-  if (loading) return <p className="text-center mt-8 text-lg">Loading chapter...</p>;
+  if (loading) return  <div className="flex justify-center items-center min-h-screen">
+        <img
+          src="/fevicon.png"
+          width="150px"
+          className="animate-pulse opacity-90 transition-opacity duration-1000"
+          alt="Loading..."
+        />
+        
+        </div>
   if (!pages.length) return <p className="text-center mt-8 text-red-500">No pages available.</p>;
 
   const totalPages = pages.length;

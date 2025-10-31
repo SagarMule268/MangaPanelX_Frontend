@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMangaList } from "../api/mangadex";
 import { Link } from "react-router-dom";
+import { SlArrowLeft,SlArrowRight ,  } from "react-icons/sl";
 
 const MangaPage = () => {
   const [manga, setManga] = useState([]);
@@ -20,7 +21,7 @@ const MangaPage = () => {
       // Optionally filter adult content
       
 
-      setManga(data);
+      setManga(data.mangas);
       setTotal(data.total);
       setLoading(false);
     } catch (error) {
@@ -48,9 +49,15 @@ const MangaPage = () => {
       </h1>
 
       {loading ? (
-        <p className="text-center text-2xl font-semibold text-gray-500">
-          Loading...
-        </p>
+         <div className="flex justify-center items-center">
+        <img
+          src="fevicon.png"
+          width="150px"
+          className="animate-pulse opacity-90 transition-opacity duration-1000"
+          alt="Loading..."
+        />
+        
+        </div>
       ) : manga.length === 0 ? (
         <p className="text-center text-2xl font-semibold text-gray-500">
           No manga found.
@@ -61,25 +68,25 @@ const MangaPage = () => {
             {manga.map((m) => (
                 <Link
                   key={m.id}
-                  to={`manga/${m.attributes.title.en || "No-Title"}/${m.id}`}
+                  to={`${m.attributes.title.en || "No-Title"}/${m.id}`}
                 >
-                  <div className="relative group border-2 border-white/30 cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <div className="relative group  cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
                     {m?.coverUrl ? (
                       <img
                         src={m.coverUrl}
                         alt={m.attributes.title.en ||m.attributes.title[`ja-ro`] }
                         className="w-full h-64 object-contain transition-transform duration-300 group-hover:scale-105"
                       />
+
                     ) : (
                       <div className="w-full h-64 bg-gray-200 flex items-center justify-center text-gray-500">
                         No Cover
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-60 transition-opacity duration-300 flex items-center justify-center">
-                      <h2 className="text-white text-lg font-semibold text-center px-2">
+                    <h2 className="text-black/90 text-lg font-semibold text-center px-2">
                         {m.attributes.title.en || "No English Title"}
                       </h2>
-                    </div>
+                    
                   </div>
                 </Link>
               )
@@ -91,16 +98,16 @@ const MangaPage = () => {
             <button
               onClick={handlePrev}
               disabled={page === 1}
-              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-black text-white rounded hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Previous
+              <SlArrowLeft/>
             </button>
             <button
               onClick={handleNext}
               disabled={page * limit >= total}
-              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-black rounded text-white hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Next
+              <SlArrowRight/>
             </button>
           </div>
         </>

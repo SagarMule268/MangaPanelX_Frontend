@@ -7,9 +7,9 @@ const Navbar = () => {
   return (
     <nav className=" text-black px-6 py-3 ">
       <div className="container mx-auto flex justify-between items-center">
-        
+       
         {/* Logo */}
-        <Link to="/" className="text-2xl font-bold tracking-wide">
+        <Link to="/" className=" font-lobster bg-gradient-to-r from-gray-700 via-gray-800 to-gray-900 bg-clip-text text-transparent">
           {/* <img src="new_logo.png" width={"200px"} alt="" /> */}
           MangaPanelX
         </Link>

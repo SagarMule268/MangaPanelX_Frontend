@@ -22,9 +22,15 @@ const MangaDetails = () => {
 
   if (!manga)
     return (
-      <p className="text-center text-2xl font-semibold text-gray-500 mt-10">
-        Loading manga details...
-      </p>
+      <div className="flex justify-center items-center min-h-screen">
+        <img
+          src="/fevicon.png"
+          width="150px"
+          className="animate-pulse opacity-90 transition-opacity duration-1000"
+          alt="Loading..."
+        />
+        
+        </div>
     );
 
  
