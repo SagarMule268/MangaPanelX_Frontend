@@ -33,7 +33,8 @@ const Footer = () => {
       {/* Bottom Text */}
       <div className="text-center text-sm mt-4 text-gray-700">
         © {new Date().getFullYear()} MangaPanelX. All Rights Reserved.
-        | Powered by MangaDex API.
+        |Data and images sourced from <a href="https://mangadex.org/">mangadex.org</a>
+.
       </div>
     </footer>
   );
