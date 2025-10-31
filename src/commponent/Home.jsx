@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMangaList, getCoverImage, searchManga } from "../api/mangadek";
+import { getMangaList , searchManga } from "../api/mangadex";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -14,17 +14,12 @@ const Home = () => {
   // Fetch manga list with pagination
   const fetchData = async (pageNumber = 1) => {
     try {
+      document.title = `MangaPanelX`;
       setLoading(true);
       const offset = limit * (pageNumber - 1);
-      const res = await getMangaList(limit, offset);
-      // Filter adult content
-      const filtered = res.data.filter(
-        (m) =>
-          m.attributes.contentRating === "safe" ||
-          m.attributes.contentRating === "suggestive"
-      );
-      setManga(filtered);
-      setTotal(res.total);
+      const data = await getMangaList(limit, offset);
+      setManga(data);
+      setTotal(data.total);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -43,15 +38,11 @@ const Home = () => {
       setLoading(true);
       const data = await searchManga(query);
       // Filter adult content
-      const filtered = data.filter(
-        (m) =>
-          m.attributes.contentRating === "safe" ||
-          m.attributes.contentRating === "suggestive"
-      );
-      setManga(filtered);
+      
+      setManga(data);
       setLoading(false);
       setPage(1); // reset page
-      setTotal(filtered.length);
+      setTotal(data.total);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -101,40 +92,22 @@ const Home = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {manga.map((m) => {
-              const cover = m.relationships?.find(
-                (rel) => rel.type === "cover_art"
-              );
-              const coverUrl = cover?.attributes?.fileName
-                ? getCoverImage(m.id, cover.attributes.fileName)
-                : null;
-
-              return (
-                <Link
-                  key={m.id}
-                  to={`manga/${m.attributes.title.en || "No-Title"}/${m.id}`}
-                >
-                  <div className="relative group cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border-2 border-white">
-                    {coverUrl ? (
-                      <img
-                        src={coverUrl}
-                        alt={m.attributes.title.en}
-                        className="w-full h-64 object-contain transition-transform duration-300 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-64 bg-gray-200 flex items-center justify-center text-gray-500">
-                        No Cover
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-center justify-center">
-                      <h2 className="text-white text-lg font-semibold text-center px-2">
-                        {m.attributes.title.en || "No English Title"}
-                      </h2>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+           {manga.map((m) => (
+  <Link key={m.id} to={`manga/${m?.attributes?.title?.en  ||  m?.attributes?.title[`ja-ro`]}/${m.id}`}>
+    <div className="relative group cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border-2 border-white">
+      <img
+        src={m.coverUrl}
+        alt={m.title}
+        className="w-full h-64 object-contain transition-transform duration-300 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-70 transition-opacity duration-300 flex items-center justify-center">
+        <h2 className="text-white text-lg font-semibold text-center px-2">
+          {m?.attributes?.title?.en  ||  m?.attributes?.title[`ja-ro`] || "title not availbale"}
+        </h2>
+      </div>
+    </div>
+  </Link>
+))}
           </div>
 
           {/* Pagination Buttons */}

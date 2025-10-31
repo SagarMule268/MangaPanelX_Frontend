@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getMangaById, getCoverImage } from "../api/mangadek";
+import { getMangaById } from "../api/mangadex";
 
 const MangaDetails = () => {
   const { title, id } = useParams();
@@ -8,8 +8,10 @@ const MangaDetails = () => {
 
   useEffect(() => {
     const fetchManga = async () => {
+      document.title = document.title = `MangapanelX - ${title}`;
       try {
         const data = await getMangaById(id);
+        console.log(data)
         setManga(data);
       } catch (error) {
         console.error("Error fetching manga details:", error);
@@ -25,16 +27,15 @@ const MangaDetails = () => {
       </p>
     );
 
-  const cover = manga.relationships.find((rel) => rel.type === "cover_art");
-  const coverUrl = cover ? getCoverImage(manga.id, cover.attributes.fileName) : null;
+ 
 
   return (
     <div className="max-w-5xl mx-auto p-6 border border-white/40 rounded-lg shadow-lg mt-6">
       <div className="flex flex-col md:flex-row gap-6">
         {/* Cover Image */}
-        {coverUrl ? (
+        {manga.coverUrl ? (
           <img
-            src={coverUrl}
+            src={manga.coverUrl}
             alt="cover"
             className="w-full md:w-64 h-auto rounded-lg shadow-md object-contain"
           />

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const BASE_URL = 'https://api.mangadex.org/' ; 
+const BASE_URL = 'http://localhost:5000/api' ; 
 // Replace with your API base URL
 export default axios.create({
     baseURL:BASE_URL,

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
+import { FaInstagram, FaFacebookF, FaTwitter,FaGithubSquare } from "react-icons/fa";
 import SocialIconsBar from "./SocialIconsBar";
 
 const Footer = () => {
@@ -18,14 +18,14 @@ const Footer = () => {
 
         {/* Right - Social Icons */}
         <div className="flex space-x-6 mt-4 md:mt-0">
-          <a href="https://instagram.com" target="_blank" rel="noreferrer">
+          <a href="https://www.instagram.com/sagar__75175/" target="_blank" rel="noreferrer">
             <FaInstagram className="text-2xl drop-shadow-2xl  hover:text-pink-500 transition hover:drop-shadow-2xl shadow-pink-300" />
           </a>
           <a href="https://facebook.com" target="_blank" rel="noreferrer">
             <FaFacebookF className="text-2xl hover:text-blue-500 transition" />
           </a>
-          <a href="https://twitter.com" target="_blank" rel="noreferrer">
-            <FaTwitter className="text-2xl hover:text-sky-400 transition" />
+          <a href="https://github.com/SagarMule268/" target="_blank" rel="noreferrer">
+            <FaGithubSquare className="text-2xl hover:text-purple-900 transition" />
           </a>
         </div>
       </div>

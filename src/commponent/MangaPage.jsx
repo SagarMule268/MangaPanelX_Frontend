@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMangaList, getCoverImage } from "../api/mangadek";
+import { getMangaList } from "../api/mangadex";
 import { Link } from "react-router-dom";
 
 const MangaPage = () => {
@@ -15,17 +15,13 @@ const MangaPage = () => {
     try {
       setLoading(true);
       const offset = limit * (pageNumber - 1);
-      const res = await getMangaList(limit, offset);
+      const data = await getMangaList(limit, offset);
 
       // Optionally filter adult content
-      const filtered = res.data.filter(
-        (m) =>
-          m.attributes.contentRating === "safe" ||
-          m.attributes.contentRating === "suggestive"
-      );
+      
 
-      setManga(filtered);
-      setTotal(res.total);
+      setManga(data);
+      setTotal(data.total);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -62,24 +58,16 @@ const MangaPage = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {manga.map((m) => {
-              const cover = m.relationships?.find(
-                (rel) => rel.type === "cover_art"
-              );
-              const coverUrl = cover?.attributes?.fileName
-                ? getCoverImage(m.id, cover.attributes.fileName)
-                : null;
-
-              return (
+            {manga.map((m) => (
                 <Link
                   key={m.id}
                   to={`manga/${m.attributes.title.en || "No-Title"}/${m.id}`}
                 >
                   <div className="relative group border-2 border-white/30 cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    {coverUrl ? (
+                    {m?.coverUrl ? (
                       <img
-                        src={coverUrl}
-                        alt={m.attributes.title.en}
+                        src={m.coverUrl}
+                        alt={m.attributes.title.en ||m.attributes.title[`ja-ro`] }
                         className="w-full h-64 object-contain transition-transform duration-300 group-hover:scale-105"
                       />
                     ) : (
@@ -94,8 +82,8 @@ const MangaPage = () => {
                     </div>
                   </div>
                 </Link>
-              );
-            })}
+              )
+            )}
           </div>
 
           {/* Pagination Buttons */}

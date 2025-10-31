@@ -1,69 +1,85 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getChapterPages } from "../api/mangadex";
 
 const ReadChapter = () => {
-  const { chapterId } = useParams();
+  const { chapterId ,chapter } = useParams();
   const [pages, setPages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchChapter = async () => {
-  try {
-    // Step 1: Get server + chapter data in one call
-    const serverRes = await fetch(`https://api.mangadex.org/at-home/server/${chapterId}`);
-    const serverData = await serverRes.json();
-
-    const baseUrl = serverData.baseUrl;
-    const chapter = serverData.chapter;
-    const hash = chapter.hash;
-    const files = chapter.data; // full-quality images
-
-    if (!files || !hash) {
-      console.error("No pages found for this chapter");
-      setLoading(false);
-      return;
-    }
-
-    // Optional CORS proxy
-    const urls = files.map((file) => `${baseUrl}/data/${hash}/${file}`);
-
-    setPages(urls);
-  } catch (err) {
-    console.error("Error fetching chapter:", err);
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+      try {
+        const data = await getChapterPages(chapterId);
+        const { pageUrls } = data;
+        setPages(pageUrls);
+      } catch (err) {
+        console.error("Error fetching chapter:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchChapter();
   }, [chapterId]);
 
-  if (loading) return <p>Loading chapter...</p>;
+  if (loading) return <p className="text-center mt-8 text-lg">Loading chapter...</p>;
+  if (!pages.length) return <p className="text-center mt-8 text-red-500">No pages available.</p>;
+
+  const totalPages = pages.length;
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-  <h2 className="text-2xl font-bold mb-4"></h2>
+    <div className="min-h-screen p-6 flex flex-col items-center gap-4">
+      <h2 className="text-2xl font-bold mb-2 text-center"> Read Chapter {chapter} </h2>
 
-  {loading && <p className="text-gray-500">Loading chapter...</p>}
-
-  {!loading && pages.length === 0 && (
-    <p className="text-red-500">No pages available.</p>
-  )}
-
-  <div className="flex flex-col items-center gap-6">
-    {pages.map((url, idx) => (
+      {/* Manga page */}
       <img
-        key={idx}
-        loading="lazy"
-        src={url}
-        alt={`Page ${idx + 1}`}
-        className="w-110 rounded shadow-md"
+        src={pages[currentPage - 1]}
+        alt={`Page ${currentPage}`}
+        className="w-full  max-w-2xl rounded-lg shadow-lg object-contain"
       />
-    ))}
-  </div>
-</div>
 
+      {/* Progress bar */}
+      <div className="w-full max-w-2xl mt-4 flex flex-col items-center">
+        <input
+          type="range"
+          min="1"
+          max={totalPages}
+          value={currentPage}
+          onChange={(e) => setCurrentPage(Number(e.target.value))}
+          className="w-full accent-pink-600 cursor-pointer"
+        />
+        <p className="text-gray-700 mt-2">
+          Page {currentPage} / {totalPages}
+        </p>
+      </div>
+
+      {/* Navigation buttons */}
+      <div className="flex gap-4 mt-2">
+        <button
+          onClick={handlePrev}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-gray-700 text-white rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </div>
   );
 };
 

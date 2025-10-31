@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getChaptersByMangaId } from "../api/mangadek";
+import { getChaptersByMangaId } from "../api/mangadex";
 
 const Chapters = () => {
   const { title, id } = useParams();
@@ -48,11 +48,11 @@ const Chapters = () => {
         {chapters.map((ch) => (
           <Link
             key={ch.id}
-            to={`/manga/read/${ch.id}`}
+            to={`/manga/read/${ch.id}/chapter-/${ch.attributes.chapter} `}
             className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300 p-3 flex flex-col items-center justify-center text-center"
           >
             <p className="font-semibold text-gray-800">
-              Chapter { parseInt( ch.attributes.chapter ) + 1|| "-"}
+              Chapter { parseInt( ch.attributes.chapter ) || "-"}
             </p>
             {ch.attributes.title && (
               <p className="text-gray-500 text-sm truncate">{ch.attributes.title}</p>
